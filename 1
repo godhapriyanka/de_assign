@@ -86,9 +86,12 @@ WHERE
 Sql date
 Code:
 
-select d1.id, d1.date,((((round(d1.date/100,0))-(round(min(d2.date)/100,0)))*12)+((round(d1.date%100,0))-(round(min(d2.date)%100,0)))) as difference_month 
-from date d1 join date d2 on d1.id=d2.id 
-group by d1.id, d1.date;
+SELECT
+  id,
+  date,
+  DATEDIFF(month, MIN(date) OVER(PARTITION BY id), date) AS month_diff
+FROM
+  table1;
 
 —————————————————————————
 
