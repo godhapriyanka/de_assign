@@ -1,0 +1,104 @@
+Python file -path
+Code:
+
+import os
+path = "//Users//priyankareddy//Desktop"
+files = os.listdir(path)
+
+for i in files:
+    print(i)
+
+
+Python list
+Code:
+
+full_names = []
+for first, last in zip(first_names, last_names):
+    full_names.append(f"{first} {last}")
+
+————————————————
+
+Python Date
+Code:
+
+def funct(year_month, quarter_num):
+    year = int(year_month[:4])
+    month = int(year_month[4:])
+    print(year)
+    print(month)
+
+    q=int(quarter_num[1:])
+    
+    current = year_month+"_"+quarter_num
+    
+    previous_quarter = f"{year}_Q{q-1}" if 5 > q > 1 else f"{year-1}_Q4" 
+    
+    previous_month = f"{year}{str((month-1)).rjust(2,'0')}"if month > 1 else f"{year-1}12" 
+    
+    next_year = f"{year+1}_{str((month-1)).rjust(2,'0')}" if month > 1 else f"{year}_12"
+    
+    return {
+        "current": current,
+        "previous quarter": previous_quarter,
+        "previous month": previous_month,
+        "next_year": next_year
+    }
+
+—————————————————
+
+
+Sql employee
+Code:
+
+SELECT DISTINCT e.employee_id
+FROM Employees e
+JOIN Employees m1 ON e.manager_id = m1.employee_id
+JOIN Employees m2 ON m1.manager_id = m2.employee_id
+JOIN Employees m3 ON m2.manager_id = m3.employee_id
+WHERE e.employee_id <> 1
+   OR m2.manager_id = 1;
+
+
+—————————————————
+
+Sql 2 weeks
+Code:
+
+WITH lagged_sales AS (
+  SELECT
+    product_id,
+    date,
+    LAG(date) OVER (PARTITION BY product_id ORDER BY date) AS prev_date
+  FROM
+    sales
+)
+SELECT
+  p.name AS product_name
+FROM
+  product p
+LEFT JOIN
+  lagged_sales ls ON p.product_id = ls.product_id
+WHERE
+  ls.date - ls.prev_date > 14 OR ls.prev_date IS NULL;
+
+———————————————————————————
+
+Sql date
+Code:
+
+select d.id, d.date,((((round(d.date/100,0))-(round(min(d1.date)/100,0)))*12)+((round(d.date%100,0))-(round(min(d1.date)%100,0)))) as month_diff from date d join date d1 on d.id=d1.id group by d.id, d.date;
+
+—————————————————————————
+
+Hive:
+
+SELECT
+  c.cust_id,
+  p.product_name,
+  t.price
+FROM
+  cust_1 c
+LATERAL VIEW posexplode(c.prod_name) p AS pos, product_name
+LATERAL VIEW posexplode(c.price) t AS pos,price
+WHERE
+  t.pos = p.pos;
