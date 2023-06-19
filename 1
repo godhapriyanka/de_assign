@@ -86,19 +86,21 @@ WHERE
 Sql date
 Code:
 
-select d.id, d.date,((((round(d.date/100,0))-(round(min(d1.date)/100,0)))*12)+((round(d.date%100,0))-(round(min(d1.date)%100,0)))) as month_diff from date d join date d1 on d.id=d1.id group by d.id, d.date;
+select d1.id, d1.date,((((round(d1.date/100,0))-(round(min(d2.date)/100,0)))*12)+((round(d1.date%100,0))-(round(min(d2.date)%100,0)))) as difference_month 
+from date d1 join date d2 on d1.id=d2.id 
+group by d1.id, d1.date;
 
 —————————————————————————
 
 Hive:
 
 SELECT
-  c.cust_id,
-  p.product_name,
-  t.price
+  cust.customer_id,
+  prod.product_name,
+  prc.price
 FROM
-  cust_1 c
-LATERAL VIEW posexplode(c.prod_name) p AS pos, product_name
-LATERAL VIEW posexplode(c.price) t AS pos,price
+  customer cust
+LATERAL VIEW posexplode(cust.prod_name) prod AS pos, product_name
+LATERAL VIEW posexplode(cust.price) prc AS pos, price
 WHERE
-  t.pos = p.pos;
+  prc.pos = prod.pos;
